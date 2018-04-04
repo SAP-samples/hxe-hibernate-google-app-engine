@@ -23,27 +23,6 @@ Clone this repository to your local computer.
 ## Installation
 > NOTE: all relative paths are relative to the project root directory. All commands are expected to be run from the project root directory.
 
-### Get the SAP HANA JDBC driver
-The SAP HANA JDBC driver can be obtained from the [SAP HANA, Express Edition download page](https://www.sap.com/cmp/ft/crm-xu16-dat-hddedft/index.html). After registration you can download the software download manager for your platform if you haven't done so already. 
-
-Using the download manager download the SAP HANA clients package for your platform.
-
-![SAP HANA, Express Edition download manager](download-manager.png)
-
-Once the download has completed, extract the downloaded archive and install the SAP HANA clients. You can follow the instructions from the [SAP HANA Client Installation and Update Guide](https://help.sap.com/hana/SAP_HANA_Client_Installation_Update_Guide_en.pdf).
-
-The JDBC driver (`ngdbc.jar`), which is installed as part of the SAP HANA client installation, is located at (unless specified otherwise during the installation):
-* on Microsoft Windows platforms: C:\Program Files\SAP\hdbclient\
-* on Linux and UNIX platforms /usr/sap/hdbclient/
-
-In order to be able to reference the JDBC driver from the Maven `pom.xml`, it must be installed into the local Maven repository. This can be done by running the following Maven command:
-
-> NOTE: Make sure to adjust the path to the JDBC driver JAR before running the command.
-
-```
-> mvn install:install-file -Dfile=C:\Program Files\SAP\hdbclient\ngdbc.jar -DgroupId=com.sap.db.jdbc -DartifactId=ngdbc -Dversion=2.2.36 -Dpackaging=jar
-```
-
 ### Copy the data sets
 Place the incidents and addresses data sets into the `src/main/resources/csv` directory as `incidents.csv` and `addresses.csv`, respectively. If you prefer a different location or different file names you can adjust the configuration properties `csv.incidents.file.location` and `csv.addresses.file.location` in the file `src/main/resources/application.properties`.
 ### Add the API key
