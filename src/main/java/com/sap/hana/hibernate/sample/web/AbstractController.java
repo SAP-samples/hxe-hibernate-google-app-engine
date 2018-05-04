@@ -5,11 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
-import org.geolatte.geom.codec.Wkt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.geo.Point;
 import org.springframework.ui.Model;
 
 import com.google.cloud.translate.Translate;
@@ -18,7 +16,7 @@ import com.google.cloud.translate.TranslateOptions;
 
 public abstract class AbstractController {
 
-	protected static final Map<String, Point<G2D>> DEFAULT_LOCATIONS;
+	protected static final Map<String, Point> DEFAULT_LOCATIONS;
 	protected static final SimpleDateFormat SDF = new SimpleDateFormat( "yyyy-MM-dd" );
 
 	/*
@@ -26,11 +24,11 @@ public abstract class AbstractController {
 	 */
 	static {
 
-		Map<String, Point<G2D>> locations = new HashMap<>();
+		Map<String, Point> locations = new HashMap<>();
 
-		locations.put( "SAP SF", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (37.6664341 -122.3978736)" ) );
-		locations.put( "Lombard St", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (37.802154870427394 -122.41876602172852)" ) );
-		locations.put( "Golden Gate Park", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (37.76942564512426 -122.4862289428711)" ) );
+		locations.put( "SAP SF", new Point( 37.6664341, -122.3978736 ) );
+		locations.put( "Lombard St", new Point( 37.802154870427394, -122.41876602172852 ) );
+		locations.put( "Golden Gate Park", new Point( 37.76942564512426, -122.4862289428711 ) );
 
 		DEFAULT_LOCATIONS = Collections.unmodifiableMap( locations );
 	}

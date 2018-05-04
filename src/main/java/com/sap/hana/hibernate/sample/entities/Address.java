@@ -3,13 +3,7 @@ package com.sap.hana.hibernate.sample.entities;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.sap.hana.hibernate.sample.util.PointDeserializer;
-import com.sap.hana.hibernate.sample.util.PointSerializer;
+import org.springframework.data.geo.Point;
 
 @Entity
 public class Address {
@@ -25,9 +19,7 @@ public class Address {
 	private String zipCode;
 	private double x = Double.NaN;
 	private double y = Double.NaN;
-	@JsonSerialize(using = PointSerializer.class)
-	@JsonDeserialize(using = PointDeserializer.class)
-	private Point<G2D> location;
+	private Point location;
 
 	@SuppressWarnings("unused")
 	private Address() {
@@ -113,11 +105,11 @@ public class Address {
 		this.y = y;
 	}
 
-	public Point<G2D> getLocation() {
+	public Point getLocation() {
 		return this.location;
 	}
 
-	public void setLocation(Point<G2D> location) {
+	public void setLocation(Point location) {
 		this.location = location;
 	}
 

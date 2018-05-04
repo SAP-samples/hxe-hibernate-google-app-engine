@@ -8,14 +8,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
+import org.springframework.data.geo.Point;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.sap.hana.hibernate.sample.util.PointDeserializer;
-import com.sap.hana.hibernate.sample.util.PointSerializer;
 
 @Entity
 @Table(name = "Incident")
@@ -34,9 +29,7 @@ public class Incident {
 	private String address;
 	private double x = Double.NaN;
 	private double y = Double.NaN;
-	@JsonSerialize(using = PointSerializer.class)
-	@JsonDeserialize(using = PointDeserializer.class)
-	private Point<G2D> location;
+	private Point location;
 	@Id
 	private long pdId;
 
@@ -136,11 +129,11 @@ public class Incident {
 		this.y = y;
 	}
 
-	public Point<G2D> getLocation() {
+	public Point getLocation() {
 		return this.location;
 	}
 
-	public void setLocation(Point<G2D> location) {
+	public void setLocation(Point location) {
 		this.location = location;
 	}
 

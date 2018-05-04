@@ -9,8 +9,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +41,7 @@ public class VisualizeController extends AbstractController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String visualize(Model model, Pageable pageable) {
 
-		Point<G2D> point = DEFAULT_LOCATIONS.get( "SAP SF" );
+		Point point = DEFAULT_LOCATIONS.get( "SAP SF" );
 
 		List<String> categories = this.repository.findCategories();
 

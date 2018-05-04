@@ -18,12 +18,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
-import org.geolatte.geom.codec.Wkt;
-import org.geolatte.geom.codec.Wkt.Dialect;
-import org.geolatte.geom.codec.WktDecoder;
-import org.geolatte.geom.crs.CoordinateReferenceSystems;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -42,8 +36,6 @@ public class DatabaseInitializer {
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger( DatabaseInitializer.class );
 
 	private static final SimpleDateFormat SDF = new SimpleDateFormat( "dd/MM/yyyy" );
-
-	private static final WktDecoder WKT_DECODER = Wkt.newDecoder( Dialect.HANA_EWKT );
 
 	private static final Pattern LOCATION_PATTERN = Pattern.compile( "\\((-?\\d+(\\.\\d+)?), (-?\\d+(\\.\\d+)?)\\)" );
 
@@ -121,29 +113,19 @@ public class DatabaseInitializer {
 							catch (NumberFormatException e) {
 								log.info( "Error parsing y coordinate", e );
 							}
-							if ( fields.get( 11 ).isEmpty() ) {
-								log.info( "Location for incident with ID " + i.getPdId() + " is empty." );
-								i.setLocation(
-										(Point<G2D>) WKT_DECODER.decode( "SRID=4326;POINT(" + i.getX() + " " + i.getY() + ")",
-												CoordinateReferenceSystems.WGS84 ) );
+
+							Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 11 ) );
+							if ( matcher.matches() ) {
+								if ( Double.isNaN( i.getX() ) ) {
+									i.setX( Double.parseDouble( matcher.group( 3 ) ) );
+								}
+
+								if ( Double.isNaN( i.getY() ) ) {
+									i.setY( Double.parseDouble( matcher.group( 1 ) ) );
+								}
 							}
 							else {
-								Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 11 ) );
-								if ( matcher.matches() ) {
-									i.setLocation(
-											(Point<G2D>) WKT_DECODER.decode( "SRID=4326;POINT(" + matcher.group( 3 ) + " " + matcher.group( 1 ) + ")",
-													CoordinateReferenceSystems.WGS84 ) );
-									if ( Double.isNaN( i.getX() ) ) {
-										i.setX( Double.parseDouble( matcher.group( 3 ) ) );
-									}
-
-									if ( Double.isNaN( i.getY() ) ) {
-										i.setY( Double.parseDouble( matcher.group( 1 ) ) );
-									}
-								}
-								else {
-									log.warn( "Unable to parse location string " + fields.get( 11 ) );
-								}
+								log.warn( "Unable to parse location string " + fields.get( 11 ) );
 							}
 
 							if ( Double.isNaN( i.getX() ) || Double.isNaN( i.getY() ) ) {
@@ -221,29 +203,18 @@ public class DatabaseInitializer {
 							catch (NumberFormatException e) {
 								log.info( "Error parsing y coordinate", e );
 							}
-							if ( fields.get( 10 ).isEmpty() ) {
-								log.info( "Location for address with ID " + a.getBaseID() + " is empty." );
-								a.setLocation(
-										(Point<G2D>) WKT_DECODER.decode( "SRID=4326;POINT(" + a.getX() + " " + a.getY() + ")",
-												CoordinateReferenceSystems.WGS84 ) );
+							Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 10 ) );
+							if ( matcher.matches() ) {
+								if ( Double.isNaN( a.getX() ) ) {
+									a.setX( Double.parseDouble( matcher.group( 3 ) ) );
+								}
+
+								if ( Double.isNaN( a.getY() ) ) {
+									a.setY( Double.parseDouble( matcher.group( 1 ) ) );
+								}
 							}
 							else {
-								Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 10 ) );
-								if ( matcher.matches() ) {
-									a.setLocation(
-											(Point<G2D>) WKT_DECODER.decode( "SRID=4326;POINT(" + matcher.group( 3 ) + " " + matcher.group( 1 ) + ")",
-													CoordinateReferenceSystems.WGS84 ) );
-									if ( Double.isNaN( a.getX() ) ) {
-										a.setX( Double.parseDouble( matcher.group( 3 ) ) );
-									}
-
-									if ( Double.isNaN( a.getY() ) ) {
-										a.setY( Double.parseDouble( matcher.group( 1 ) ) );
-									}
-								}
-								else {
-									log.warn( "Unable to parse location string " + fields.get( 10 ) );
-								}
+								log.warn( "Unable to parse location string " + fields.get( 10 ) );
 							}
 
 							if ( Double.isNaN( a.getX() ) || Double.isNaN( a.getY() ) ) {

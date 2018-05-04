@@ -12,7 +12,7 @@
 					<div class="col-sm-2"></div>
 					<div class="col-sm-10">
 						<a class="btn btn-default" th:each="location : ${locations}"
-							th:onclick="${{'$(''#location'').val(''' + location.value.position.lon + ',' + location.value.position.lat + ''')'}}"
+							th:onclick="${{'$(''#location'').val(''' + location.value.x + ',' + location.value.y + ''')'}}"
 							th:text="${location.key}">Foo</a>
 					</div>
 				</div>
@@ -20,7 +20,7 @@
 				<div class="form-group">
 					<label for="location" class="col-sm-2 control-label" th:text="${locationText} ?: 'Location:'">Location:</label>
 					<div class="col-sm-2">
-						<input id="location" name="location" th:value="${{location.position.lon + ',' + location.position.lat}}"
+						<input id="location" name="location" th:value="${{location.x + ',' + location.y}}"
 							type="text" class="form-control" placeholder="lat,long" />
 					</div>
 					<div class="col-sm-4">

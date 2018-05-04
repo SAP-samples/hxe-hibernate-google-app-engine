@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
+import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +32,7 @@ public class IncidentLocationAndCountRestController {
 	 * @return A list of locations matching the criteria and the associated number of incidents
 	 */
 	@RequestMapping(path = Constants.INCIDENT_LOCATION_AND_COUNT_WITH_CATEGORY_API_PATH, produces = "application/json", method = RequestMethod.GET)
-	List<IncidentLocationAndCount> findByLocationAndCategoryWithWeight(@RequestParam("location") Point<G2D> location,
+	List<IncidentLocationAndCount> findByLocationAndCategoryWithWeight(@RequestParam("location") Point location,
 			@RequestParam("distance") Distance distance, @RequestParam("dateFrom") Date dateFrom,
 			@RequestParam("dateTo") Date dateTo, @RequestParam("category") List<String> category) {
 		return this.repository.findByLocationAndCategory( location, distance, dateFrom, dateTo, category );
@@ -49,7 +48,7 @@ public class IncidentLocationAndCountRestController {
 	 * @return A list of locations matching the criteria and the associated number of incidents
 	 */
 	@RequestMapping(path = Constants.INCIDENT_LOCATION_AND_COUNT_API_PATH, produces = "application/json", method = RequestMethod.GET)
-	List<IncidentLocationAndCount> findByLocationWithWeight(@RequestParam("location") Point<G2D> location,
+	List<IncidentLocationAndCount> findByLocationWithWeight(@RequestParam("location") Point location,
 			@RequestParam("distance") Distance distance, @RequestParam("dateFrom") Date dateFrom,
 			@RequestParam("dateTo") Date dateTo) {
 		return this.repository.findByLocationAndCategory( location, distance, dateFrom, dateTo, null );

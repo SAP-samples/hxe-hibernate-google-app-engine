@@ -22,12 +22,10 @@
 		<apt.version>1.1.3</apt.version>
 		<hibernate.version>5.2.15.Final</hibernate.version>
 		<jackson.version>2.9.4</jackson.version>
-
-		<jdbc.username>DEMO_USER</jdbc.username>
-		<jdbc.password>D3m0-U$eR</jdbc.password>
-		<jdbc.host>hxehost</jdbc.host>
-		<jdbc.port>39015</jdbc.port>
-		<jdbc.url>jdbc:sap://${jdbc.host}:${jdbc.port}/</jdbc.url>
+		
+		<jdbc.username>sa</jdbc.username>
+		<jdbc.password></jdbc.password>
+		<jdbc.url>jdbc:h2:file:${project.basedir}/src/main/db/sfpd</jdbc.url>
 
 		<google.project.id>REPLACE_WITH_YOUR_PROJECT_ID</google.project.id>
 		<google.api.key>REPLACE_WITH_YOUR_API_KEY</google.api.key>
@@ -49,10 +47,6 @@
 				</dependency>
 			</dependencies>
 			<properties>
-				<jdbc.username>DEMO_USER</jdbc.username>
-				<jdbc.password>D3m0-U$eR</jdbc.password>
-				<jdbc.host>hxehost</jdbc.host>
-				<jdbc.port>39015</jdbc.port>
 				<maps.api.key.parameter></maps.api.key.parameter>
 			</properties>
 		</profile>
@@ -75,12 +69,6 @@
 				<version>${spring-data.version}</version>
 				<scope>import</scope>
 				<type>pom</type>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-spatial</artifactId>
-				<version>${hibernate.version}</version>
 			</dependency>
 
 			<dependency>
@@ -130,11 +118,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-spatial</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 			<scope>runtime</scope>
@@ -175,9 +158,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sap.cloud.db.jdbc</groupId>
-			<artifactId>ngdbc</artifactId>
-			<version>2.2.16</version>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.197</version>
 		</dependency>
 
 		<dependency>

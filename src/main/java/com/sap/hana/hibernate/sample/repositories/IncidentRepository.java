@@ -1,21 +1,19 @@
 package com.sap.hana.hibernate.sample.repositories;
 
-import java.math.BigInteger;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Repository;
 
 import com.sap.hana.hibernate.sample.entities.Incident;
@@ -38,87 +36,61 @@ public class IncidentRepository extends AbstractRepository {
 	 * @return the list of incidents matching the given criteria
 	 */
 	@Transactional
-	public Page<Incident> findByLocationNear(Point<G2D> location, Distance distance, Date dateFrom, Date dateTo,
+	public Page<Incident> findByLocationNear(Point location, Distance distance, Date dateFrom, Date dateTo,
 			List<String> category, Pageable pageable) {
-		javax.persistence.Query query;
-
-		final UUID uuid = UUID.randomUUID();
-		final String tableName = "#" + uuid.toString();
-
-		final List<Incident> resultList;
-		long resultCount;
-		try {
-			query = this.em.createNativeQuery(
-					"create local temporary column table \"" + tableName + "\" (X DOUBLE, Y DOUBLE, C BIGINT)" );
-			query.executeUpdate();
-
-			if ( category == null || category.isEmpty() ) {
-				query = this.em.createNativeQuery(
-						"insert into \"" + tableName + "\" (X, Y, C) "
-								+ "select i.location.ST_X(), i.location.ST_Y(), count(*) "
-								+ "from Incident i "
-								+ "where i.date between :dateFrom and :dateTo "
-								+ "  and i.location.ST_WithinDistance(ST_GeomFromEWKB(:location), :distance) = 1 "
-								+ "group by i.location" );
-			}
-			else {
-				query = this.em.createNativeQuery(
-						"insert into \"" + tableName + "\" (X, Y, C) "
-								+ "select i.location.ST_X(), i.location.ST_Y(), count(*) "
-								+ "from Incident i "
-								+ "where i.category in :category "
-								+ "  and i.date between :dateFrom and :dateTo "
-								+ "  and i.location.ST_WithinDistance(ST_GeomFromEWKB(:location), :distance) = 1 "
-								+ "group by i.location" );
-				query.setParameter( "category", category );
-			}
-
-			query.setParameter( "dateFrom", dateFrom );
-			query.setParameter( "dateTo", dateTo );
-			query.setParameter( "distance", distance );
-			query.setParameter( "location", location );
-
-			resultCount = query.executeUpdate();
-
-			if ( resultCount == 0 ) {
-				resultList = Collections.emptyList();
-			}
-			else {
-				if ( category == null || category.isEmpty() ) {
-					query = this.em.createNativeQuery(
-							"select * from Incident i "
-									+ "right outer join \"" + tableName + "\" t on i.x=t.x and i.y=t.y "
-									+ "where i.date between :dateFrom and :dateTo "
-									+ "order by i.date desc",
-							Incident.class );
-				}
-				else {
-					query = this.em.createNativeQuery(
-							"select * from Incident i "
-									+ "right outer join \"" + tableName + "\" t on i.x=t.x and i.y=t.y "
-									+ "where i.category in :category "
-									+ "  and  i.date between :dateFrom and :dateTo "
-									+ "order by i.date desc",
-							Incident.class );
-					query.setParameter( "category", category );
-				}
-
-				query.setParameter( "dateFrom", dateFrom );
-				query.setParameter( "dateTo", dateTo );
-				query.setFirstResult( (int) pageable.getOffset() );
-				query.setMaxResults( pageable.getPageSize() );
-
-				resultList = query.getResultList();
-
-				query = this.em.createNativeQuery( "select sum(c) from \"" + tableName + "\"" );
-				resultCount = ( (BigInteger) query.getSingleResult() ).longValue();
-			}
+		TypedQuery<Incident> query;
+		if ( category == null || category.isEmpty() ) {
+			query = this.em.createQuery(
+					"select i from Incident i "
+							+ "where i.date between :dateFrom and :dateTo "
+							+ "  and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) "
+							+ "    and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) "
+							+ "  and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) "
+							+ "    and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319) "
+							+ "order by i.date desc",
+					Incident.class );
 		}
-		finally {
-			query = this.em.createNativeQuery( "drop table \"" + tableName + "\" cascade" );
-			query.executeUpdate();
+		else {
+			query = this.em.createQuery(
+					"select i from Incident i "
+							+ "where i.category in :category "
+							+ "  and i.date between :dateFrom and :dateTo "
+							+ "  and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) "
+							+ "    and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) "
+							+ "  and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) "
+							+ "    and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319) "
+							+ "order by i.date desc",
+					Incident.class );
+			query.setParameter( "category", category );
 		}
 
-		return new PageImpl<Incident>( resultList, pageable, resultCount );
+		query.setParameter( "dateFrom", dateFrom );
+		query.setParameter( "dateTo", dateTo );
+		query.setParameter( "location", location );
+		query.setParameter( "distance", distance );
+
+		query.setFirstResult( (int) pageable.getOffset() );
+		query.setMaxResults( pageable.getPageSize() );
+
+		Query countQuery;
+		if ( category == null || category.isEmpty() ) {
+			countQuery = this.em.createQuery(
+					"select count(i) from Incident i where i.date between :dateFrom and :dateTo and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319)" );
+
+		}
+		else {
+			countQuery = this.em.createQuery(
+					"select count(i) from Incident i where i.category in :category and i.date between :dateFrom and :dateTo and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319)" );
+			countQuery.setParameter( "category", category );
+		}
+
+		countQuery.setParameter( "dateFrom", dateFrom );
+		countQuery.setParameter( "dateTo", dateTo );
+		countQuery.setParameter( "location", location );
+		countQuery.setParameter( "distance", distance );
+
+		long count = ( (Long) countQuery.getSingleResult() ).longValue();
+
+		return new PageImpl<>( query.getResultList(), pageable, count );
 	}
 }
