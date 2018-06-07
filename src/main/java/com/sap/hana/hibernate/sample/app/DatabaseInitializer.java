@@ -41,7 +41,7 @@ public class DatabaseInitializer {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger( DatabaseInitializer.class );
 
-	private static final SimpleDateFormat SDF = new SimpleDateFormat( "dd/MM/yyyy" );
+	private static final SimpleDateFormat SDF = new SimpleDateFormat( "MM/dd/yyyy" );
 
 	private static final WktDecoder WKT_DECODER = Wkt.newDecoder( Dialect.HANA_EWKT );
 
