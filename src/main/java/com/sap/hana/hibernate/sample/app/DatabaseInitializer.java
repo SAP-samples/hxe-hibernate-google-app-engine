@@ -35,7 +35,7 @@ public class DatabaseInitializer {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger( DatabaseInitializer.class );
 
-	private static final SimpleDateFormat SDF = new SimpleDateFormat( "dd/MM/yyyy" );
+	private static final SimpleDateFormat SDF = new SimpleDateFormat( "MM/dd/yyyy" );
 
 	private static final Pattern LOCATION_PATTERN = Pattern.compile( "\\((-?\\d+(\\.\\d+)?), (-?\\d+(\\.\\d+)?)\\)" );
 
