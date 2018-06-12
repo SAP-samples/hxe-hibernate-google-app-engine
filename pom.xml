@@ -4,7 +4,7 @@
 
 	<groupId>com.sap.hana</groupId>
 	<artifactId>hibernate-sample</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 
 	<packaging>war</packaging>
 
@@ -13,14 +13,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.10.RELEASE</version>
+		<version>1.5.13.RELEASE</version>
 	</parent>
 
 	<properties>
-		<spring.version>5.0.4.RELEASE</spring.version>
-		<spring-data.version>Kay-SR5</spring-data.version>
+		<spring.version>5.0.6.RELEASE</spring.version>
+		<spring-data.version>Kay-SR7</spring-data.version>
 		<apt.version>1.1.3</apt.version>
-		<hibernate.version>5.2.15.Final</hibernate.version>
+		<hibernate.version>5.2.17.Final</hibernate.version>
 		<jackson.version>2.9.4</jackson.version>
 		
 		<jdbc.username>sa</jdbc.username>
@@ -74,7 +74,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>24.0-jre</version>
+				<version>24.1.1-jre</version>
 			</dependency>
 
 		</dependencies>
@@ -166,7 +166,7 @@
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-translate</artifactId>
-			<version>1.21.0</version>
+			<version>1.33.0</version>
 		</dependency>
 
 		<dependency>
