@@ -124,6 +124,9 @@ public class DatabaseInitializer {
 						i.setAddress( fields.get( 8 ) );
 						try {
 							double x = Double.parseDouble( fields.get( 9 ) );
+							if ( !isValidXCoordinate( x, i.getPdId(), "incident" ) ) {
+								return Long.valueOf( 0 );
+							}
 							i.setX( x );
 						}
 						catch (NumberFormatException e) {
@@ -131,6 +134,9 @@ public class DatabaseInitializer {
 						}
 						try {
 							double y = Double.parseDouble( fields.get( 10 ) );
+							if ( !isValidYCoordinate( y, i.getPdId(), "incident" ) ) {
+								return Long.valueOf( 0 );
+							}
 							i.setY( y );
 						}
 						catch (NumberFormatException e) {
@@ -316,6 +322,9 @@ public class DatabaseInitializer {
 						a.setZipCode( fields.get( 7 ) );
 						try {
 							double x = Double.parseDouble( fields.get( 8 ) );
+							if ( !isValidXCoordinate( x, a.getBaseID().longValue(), "address" ) ) {
+								return Long.valueOf( 0 );
+							}
 							a.setX( x );
 						}
 						catch (NumberFormatException e) {
@@ -323,6 +332,9 @@ public class DatabaseInitializer {
 						}
 						try {
 							double y = Double.parseDouble( fields.get( 9 ) );
+							if ( !isValidYCoordinate( y, a.getBaseID().longValue(), "address" ) ) {
+								return Long.valueOf( 0 );
+							}
 							a.setY( y );
 						}
 						catch (NumberFormatException e) {
@@ -406,5 +418,25 @@ public class DatabaseInitializer {
 		fields.add( currentField.toString() );
 
 		return fields;
+	}
+
+	private boolean isValidXCoordinate(double x, long id, String type) {
+		if ( x < -123 || x > -122 ) {
+			// ignore if out of bounds
+			log.info( "X coordinate  of " + type + " with ID " + id + " is out of bounds: " + x );
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isValidYCoordinate(double y, long id, String type) {
+		if ( y < 37 || y > 38 ) {
+			// ignore if out of bounds
+			log.info( "Y coordinate  of " + type + " with ID " + id + " is out of bounds: " + y );
+			return false;
+		}
+
+		return true;
 	}
 }
