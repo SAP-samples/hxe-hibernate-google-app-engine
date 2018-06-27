@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Streams;
@@ -143,18 +144,26 @@ public class DatabaseInitializer {
 							log.info( "Error parsing y coordinate", e );
 						}
 
-						Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 11 ) );
-						if ( matcher.matches() ) {
-							if ( Double.isNaN( i.getX() ) ) {
-								i.setX( Double.parseDouble( matcher.group( 3 ) ) );
-							}
-
-							if ( Double.isNaN( i.getY() ) ) {
-								i.setY( Double.parseDouble( matcher.group( 1 ) ) );
-							}
+						if ( fields.get( 11 ).isEmpty() ) {
+							log.info( "Location for incident with ID " + i.getPdId() + " is empty." );
+							i.setLocation( new Point( i.getX(), i.getY() ) );
 						}
 						else {
-							log.warn( "Unable to parse location string " + fields.get( 11 ) );
+							Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 11 ) );
+							if ( matcher.matches() ) {
+								i.setLocation( new Point( Double.parseDouble( matcher.group( 3 ) ), Double.parseDouble( matcher.group( 1 ) ) ) );
+
+								if ( Double.isNaN( i.getX() ) ) {
+									i.setX( Double.parseDouble( matcher.group( 3 ) ) );
+								}
+
+								if ( Double.isNaN( i.getY() ) ) {
+									i.setY( Double.parseDouble( matcher.group( 1 ) ) );
+								}
+							}
+							else {
+								log.warn( "Unable to parse location string " + fields.get( 11 ) );
+							}
 						}
 
 						if ( Double.isNaN( i.getX() ) || Double.isNaN( i.getY() ) ) {
@@ -340,18 +349,26 @@ public class DatabaseInitializer {
 						catch (NumberFormatException e) {
 							log.info( "Error parsing y coordinate", e );
 						}
-						Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 10 ) );
-						if ( matcher.matches() ) {
-							if ( Double.isNaN( a.getX() ) ) {
-								a.setX( Double.parseDouble( matcher.group( 3 ) ) );
-							}
-
-							if ( Double.isNaN( a.getY() ) ) {
-								a.setY( Double.parseDouble( matcher.group( 1 ) ) );
-							}
+						if ( fields.get( 10 ).isEmpty() ) {
+							log.info( "Location for address with ID " + a.getBaseID() + " is empty." );
+							a.setLocation( new Point( a.getX(), a.getY() ) );
 						}
 						else {
-							log.warn( "Unable to parse location string " + fields.get( 10 ) );
+							Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 10 ) );
+							if ( matcher.matches() ) {
+								a.setLocation( new Point( Double.parseDouble( matcher.group( 3 ) ), Double.parseDouble( matcher.group( 1 ) ) ) );
+
+								if ( Double.isNaN( a.getX() ) ) {
+									a.setX( Double.parseDouble( matcher.group( 3 ) ) );
+								}
+
+								if ( Double.isNaN( a.getY() ) ) {
+									a.setY( Double.parseDouble( matcher.group( 1 ) ) );
+								}
+							}
+							else {
+								log.warn( "Unable to parse location string " + fields.get( 10 ) );
+							}
 						}
 
 						if ( Double.isNaN( a.getX() ) || Double.isNaN( a.getY() ) ) {
