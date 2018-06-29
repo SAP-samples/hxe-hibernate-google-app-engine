@@ -39,13 +39,8 @@ Edit the file `pom.xml` and add your Google Cloud Platform API key as the value 
 ```
 
 ### Database setup
-The database tables used for storing the application data can be created using the SQL script located at `src/main/resources/create_schema.sql`. You can use any client to execute the statements, for example SAP HANA Studio, or the `hdbsql` command line client.
+The database tables used for storing the application data are automatically created by the application using the SQL script located at `src/main/resources/db/migration/V1__CreateSchema.sql`. 
 
-> NOTE: Before running the command adjust the SAP HANA instance number (-i 90), the database name (-d HXE), the database user name (-u DEMO_USER), the database user password (-p D3m0-U$eR) to the correct values for your SAP HANA installation.
-
-```
-> hdbsql -i 90 -d HXE -u DEMO_USER -p D3m0-U$eR -I src/main/resources/create_schema.sql
-```
 
 ### Adjust the JDBC connection data
 Edit the file `pom.xml` and adjust the properties `jdbc.username`, `jdbc.password`, `jdbc.host`, and `jdbc.port` to match the connection data of your SAP HANA instance.
