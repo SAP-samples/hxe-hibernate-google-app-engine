@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 
@@ -76,6 +77,7 @@ public class DatabaseInitializer {
 	 */
 	@EventListener
 	@Transactional
+	@Order(1)
 	public void importIncidents(ContextRefreshedEvent event) {
 		if ( this.incidentRepository.count() > 0 ) {
 			// the incidents are already loaded
@@ -146,12 +148,12 @@ public class DatabaseInitializer {
 
 						if ( fields.get( 11 ).isEmpty() ) {
 							log.info( "Location for incident with ID " + i.getPdId() + " is empty." );
-							i.setLocation( new Point( i.getX(), i.getY() ) );
+							i.setLocation( createLocation( i.getX(), i.getY() ) );
 						}
 						else {
 							Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 11 ) );
 							if ( matcher.matches() ) {
-								i.setLocation( new Point( Double.parseDouble( matcher.group( 3 ) ), Double.parseDouble( matcher.group( 1 ) ) ) );
+								i.setLocation( createLocation( Double.parseDouble( matcher.group( 3 ) ), Double.parseDouble( matcher.group( 1 ) ) ) );
 
 								if ( Double.isNaN( i.getX() ) ) {
 									i.setX( Double.parseDouble( matcher.group( 3 ) ) );
@@ -290,6 +292,7 @@ public class DatabaseInitializer {
 	 */
 	@EventListener
 	@Transactional
+	@Order(2)
 	public void importAddresses(ContextRefreshedEvent event) {
 		if ( this.addressRepository.count() > 0 ) {
 			// the addresses are already loaded
@@ -351,12 +354,12 @@ public class DatabaseInitializer {
 						}
 						if ( fields.get( 10 ).isEmpty() ) {
 							log.info( "Location for address with ID " + a.getBaseID() + " is empty." );
-							a.setLocation( new Point( a.getX(), a.getY() ) );
+							a.setLocation( createLocation( a.getX(), a.getY() ) );
 						}
 						else {
 							Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 10 ) );
 							if ( matcher.matches() ) {
-								a.setLocation( new Point( Double.parseDouble( matcher.group( 3 ) ), Double.parseDouble( matcher.group( 1 ) ) ) );
+								a.setLocation( createLocation( Double.parseDouble( matcher.group( 3 ) ), Double.parseDouble( matcher.group( 1 ) ) ) );
 
 								if ( Double.isNaN( a.getX() ) ) {
 									a.setX( Double.parseDouble( matcher.group( 3 ) ) );
@@ -455,5 +458,9 @@ public class DatabaseInitializer {
 		}
 
 		return true;
+	}
+
+	private Point createLocation(double x, double y) {
+		return new Point( x, y );
 	}
 }
