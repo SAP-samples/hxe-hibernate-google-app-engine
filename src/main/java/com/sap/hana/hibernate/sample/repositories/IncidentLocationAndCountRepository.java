@@ -5,8 +5,9 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
+import org.geolatte.geom.G2D;
+import org.geolatte.geom.Point;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Repository;
 
 import com.sap.hana.hibernate.sample.entities.IncidentLocationAndCount;
@@ -24,7 +25,7 @@ public class IncidentLocationAndCountRepository extends AbstractRepository {
 	 * @param category The categories of the incident
 	 * @return A list of locations matching the criteria and the associated number of incidents
 	 */
-	public List<IncidentLocationAndCount> findByLocationAndCategory(Point location, Distance distance,
+	public List<IncidentLocationAndCount> findByLocationAndCategory(Point<G2D> location, Distance distance,
 			Date dateFrom, Date dateTo, List<String> category) {
 		TypedQuery<IncidentLocationAndCount> query;
 		if ( category == null || category.isEmpty() ) {

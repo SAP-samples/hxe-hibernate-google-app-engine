@@ -9,11 +9,12 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
+import org.geolatte.geom.G2D;
+import org.geolatte.geom.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Repository;
 
 import com.sap.hana.hibernate.sample.entities.Incident;
@@ -36,7 +37,7 @@ public class IncidentRepository extends AbstractRepository {
 	 * @return the list of incidents matching the given criteria
 	 */
 	@Transactional
-	public Page<Incident> findByLocationNear(Point location, Distance distance, Date dateFrom, Date dateTo,
+	public Page<Incident> findByLocationNear(Point<G2D> location, Distance distance, Date dateFrom, Date dateTo,
 			List<String> category, Pageable pageable) {
 		TypedQuery<Incident> query;
 		if ( category == null || category.isEmpty() ) {
@@ -76,8 +77,8 @@ public class IncidentRepository extends AbstractRepository {
 		if ( category == null || category.isEmpty() ) {
 			countQuery = this.em.createQuery(
 					"select count(i) from Incident i "
-							+ "where i.date between :dateFrom "
-							+ "  and :dateTo and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) "
+							+ "where i.date between :dateFrom and :dateTo "
+							+ "  and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) "
 							+ "    and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) "
 							+ "  and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) "
 							+ "    and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319)" );

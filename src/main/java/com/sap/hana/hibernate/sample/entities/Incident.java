@@ -8,9 +8,15 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.data.geo.Point;
+import org.geolatte.geom.C2D;
+import org.geolatte.geom.G2D;
+import org.geolatte.geom.Point;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.sap.hana.hibernate.sample.util.PointDeserializer;
+import com.sap.hana.hibernate.sample.util.PointSerializer;
 
 @Entity
 @Table(name = "Incident")
@@ -29,7 +35,13 @@ public class Incident {
 	private String address;
 	private double x = Double.NaN;
 	private double y = Double.NaN;
-	private Point location;
+	@JsonSerialize(using = PointSerializer.class)
+	@JsonDeserialize(using = PointDeserializer.class)
+	private Point<G2D> location;
+	@JsonSerialize(using = PointSerializer.class)
+	@JsonDeserialize(using = PointDeserializer.class)
+	private Point<C2D> mapLocation;
+
 	@Id
 	private long pdId;
 
@@ -129,12 +141,20 @@ public class Incident {
 		this.y = y;
 	}
 
-	public Point getLocation() {
+	public Point<G2D> getLocation() {
 		return this.location;
 	}
 
-	public void setLocation(Point location) {
+	public void setLocation(Point<G2D> location) {
 		this.location = location;
+	}
+
+	public Point<C2D> getMapLocation() {
+		return this.mapLocation;
+	}
+
+	public void setMapLocation(Point<C2D> mapLocation) {
+		this.mapLocation = mapLocation;
 	}
 
 	public long getPdId() {

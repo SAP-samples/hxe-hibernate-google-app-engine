@@ -3,11 +3,12 @@ package com.sap.hana.hibernate.sample.controllers;
 import java.util.Date;
 import java.util.List;
 
+import org.geolatte.geom.G2D;
+import org.geolatte.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,7 @@ public class IncidentRestController {
 	 * @return the list of incidents matching the given criteria
 	 */
 	@RequestMapping(path = Constants.INCIDENT_API_PATH, produces = "application/json", method = RequestMethod.GET)
-	Page<Incident> findByLocationNear(@RequestParam("location") Point location,
+	Page<Incident> findByLocationNear(@RequestParam("location") Point<G2D> location,
 			@RequestParam("distance") Distance distance, @RequestParam("dateFrom") Date dateFrom,
 			@RequestParam("dateTo") Date dateTo, @RequestParam("page") int page, @RequestParam("size") int size) {
 		return this.repository.findByLocationNear( location, distance, dateFrom, dateTo, null,
@@ -55,7 +56,7 @@ public class IncidentRestController {
 	 * @return the list of incidents matching the given criteria
 	 */
 	@RequestMapping(path = Constants.INCIDENT_WITH_CATEGORY_API_PATH, produces = "application/json", method = RequestMethod.GET)
-	Page<Incident> findByLocationNear(@RequestParam("location") Point location,
+	Page<Incident> findByLocationNear(@RequestParam("location") Point<G2D> location,
 			@RequestParam("distance") Distance distance, @RequestParam("dateFrom") Date dateFrom,
 			@RequestParam("dateTo") Date dateTo, @RequestParam("category") List<String> category,
 			@RequestParam("page") int page, @RequestParam("size") int size) {

@@ -25,4 +25,20 @@ public class Constants {
 
 	public static final String INCIDENT_LOCATION_AND_COUNT_WITH_CATEGORY_API_PATH_TEMPLATE = INCIDENT_LOCATION_AND_COUNT_WITH_CATEGORY_API_PATH
 			+ "{?location,distance,dateFrom,dateTo,category}";
+
+	public static final String CLUSTER_API_PATH = API_PREFIX + "/cluster";
+
+	public static final String CLUSTER_API_PATH_TEMPLATE = CLUSTER_API_PATH + "{?location,distance,dateFrom,dateTo}";
+
+	public static final String CLUSTER_WITH_CATEGORY_API_PATH = API_PREFIX + "/clusterWithCategory";
+
+	public static final String CLUSTER_WITH_CATEGORY_API_PATH_TEMPLATE = CLUSTER_WITH_CATEGORY_API_PATH + "{?location,distance,dateFrom,dateTo,category}";
+
+	public static final String PREDICTION_API_PATH = API_PREFIX + "/predict";
+
+	public static final String PREDICTION_API_PATH_TEMPLATE = PREDICTION_API_PATH + "{?location,distance,dateFrom,dateTo}";
+
+	public static final String PREDICTION_WITH_CATEGORY_API_PATH = API_PREFIX + "/predictWithCategory";
+
+	public static final String PREDICTION_WITH_CATEGORY_API_PATH_TEMPLATE = PREDICTION_WITH_CATEGORY_API_PATH + "{?location,distance,dateFrom,dateTo,category}";
 }

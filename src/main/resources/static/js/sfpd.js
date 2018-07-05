@@ -7,7 +7,8 @@ sfpd = {
     	heatMap: null, // variable holding the heat map
     	marker: null, // variable holding the current location marker
     	newMarker: null, // variable holding the new location marker
-        map: null // variable holding the map object
+        map: null, // variable holding the map object
+        clusters: [] // variable holding incident clusters
     },
     
     /*
@@ -107,6 +108,12 @@ sfpd = {
     	
     	if (sfpd.map.heatMapData.length) {
             sfpd.map.heatMapData = [];
+        }
+    	
+    	while (sfpd.map.clusters.length) {
+            var cluster = sfpd.map.clusters.pop();
+            cluster.shape.setMap(null);
+            cluster.marker.setMap(null);
         }
     },
 
@@ -403,6 +410,9 @@ sfpd = {
         	var incidents = response;
         	incidents.forEach(function (incident) {
         		// for each incident create the heat map data
+        		if (incident.weight == 0) {
+        			return;
+        		}
                 sfpd.map.heatMapData.push({location: new google.maps.LatLng(incident.y, incident.x), weight: incident.weight});
                 sumWeight += incident.weight;
             });
@@ -417,6 +427,118 @@ sfpd = {
             });
             
         	$('#resultCounter').html(sumWeight);
+        }).fail(function() {
+        	$('#messageArea').html('<div class="alert alert-danger alert-dismissible" role="alert">\
+        			                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\
+        			                    <strong>Error!</strong> An error occurred while loading the data\
+        			                </div>')
+        	$('#resultCounter').html('0');
+        }).always(function() {
+            $('#resultCounter').spin(false);
+            $("#submit").prop('disabled', false);
+        });
+    },
+    
+    /*
+     * Generate and display incident clusters
+     */
+    performClusterAnalysis: function () {
+
+    	// Check if a map exists
+    	if (!sfpd.map.map) {
+            return;
+        }
+    	
+    	// Display a loading animation
+    	$("#resultCounter").html('');
+		var opts = {
+				lines: 8, 
+				length: 3, 
+				width: 3, 
+				radius: 3,
+				color: '#00d',
+				top: '35%',
+				left: '6em',
+		}
+		$("#resultCounter").spin(opts);
+		$("#submit").prop('disabled', true);
+
+		sfpd.resetMap();
+    	
+    	// get the current location
+    	var location = $("#location").val();
+    	
+    	sfpd.centerMap(location);
+
+    	// create the request URL
+        var template = undefined;
+    	
+        var category = $("#category").val();
+        
+        if (category == undefined || category.length == 0) {
+        	template = new URITemplate($("#uris").attr("data-uri"));
+        }
+        else {
+        	template = new URITemplate($("#uris").attr("data-uri-category"));
+        }
+    	
+        var uri = template.expand({
+            "location": location,
+            "distance": $("#distance").val(),
+            "dateFrom": $("#dateFrom").val(),
+            "dateTo": $("#dateTo").val(),
+            "category": category
+        });
+
+        // call the request URL
+        $.get(uri, function(response) {
+        	var clusters = response;
+        	clusters.forEach(function (cluster) {
+        		if (cluster.clusterId < 1) {
+        			return;
+        		}
+        		var bounds = new google.maps.LatLngBounds();
+            	var clusterCoordinates = [];
+            	for (var i = 0 ; i < cluster.convexHull.positions.length ; i++) {
+            		var latlng = new google.maps.LatLng(cluster.convexHull.positions[i].lat, cluster.convexHull.positions[i].lon);
+            		clusterCoordinates.push(latlng);
+            		bounds.extend(latlng);
+            	}
+            	var r = Math.floor(Math.random() * 256);
+            	var g = Math.floor(Math.random() * 256);
+            	var b = Math.floor(Math.random() * 256);
+            	var color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+            	var clusterShape = new google.maps.Polygon({
+            	    paths: [clusterCoordinates],
+            	    fillColor: color,
+            	    fillOpacity: 0.2,
+            	    geodesic: true,
+            	    strokeColor: color,
+            	    strokeOpacity: 1.0,
+            	    strokeWeight: 2,
+            	    clickable: false,
+            	    map: sfpd.map.map
+            	});
+            	
+            	var clusterMarker = new google.maps.Marker({
+                	position: bounds.getCenter(),
+                	title: "#Incidents: " + cluster.numberOfIncidents + "\nCategory: " + cluster.clusterCategory,
+                	icon: {
+                	      path: google.maps.SymbolPath.CIRCLE,
+                	      scale: 16,
+                	      fillColor: color,
+                	      strokeWeight: 1,
+                	      fillOpacity: 0.8
+                	},
+                	clickable: false,
+                	map: sfpd.map.map
+                });
+            	  
+            	sfpd.map.clusters.push({shape: clusterShape, marker: clusterMarker});
+            });
+        	
+            
+        	$('#resultCounter').html(clusters.length);
         }).fail(function() {
         	$('#messageArea').html('<div class="alert alert-danger alert-dismissible" role="alert">\
         			                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\
