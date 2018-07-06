@@ -22,10 +22,7 @@
 
 		<h1>SFPD Police Data Analyzer</h1>
 		
-		<ul class="nav nav-tabs">
-		  <li role="presentation"><a href="/"><strong th:text="${visualizeText} ?: 'Visualize'">Visualize</strong></a></li>
-		  <li role="presentation" class="active"><a href="/analyze"><strong th:text="${analyzeText} ?: 'Analyze'">Analyze</strong></a></li>
-		</ul>
+		<div th:replace="navigationPanel :: navigationPanel(active='analyze')"></div>
 
 		<div th:replace="selectPanel :: selectPanel(onSubmit='sfpd.performIncidentSearch()')"></div>
 

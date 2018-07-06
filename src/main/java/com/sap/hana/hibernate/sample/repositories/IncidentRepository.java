@@ -75,12 +75,23 @@ public class IncidentRepository extends AbstractRepository {
 		Query countQuery;
 		if ( category == null || category.isEmpty() ) {
 			countQuery = this.em.createQuery(
-					"select count(i) from Incident i where i.date between :dateFrom and :dateTo and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319)" );
+					"select count(i) from Incident i "
+							+ "where i.date between :dateFrom "
+							+ "  and :dateTo and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) "
+							+ "    and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) "
+							+ "  and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) "
+							+ "    and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319)" );
 
 		}
 		else {
 			countQuery = this.em.createQuery(
-					"select count(i) from Incident i where i.category in :category and i.date between :dateFrom and :dateTo and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319)" );
+					"select count(i) from Incident i "
+							+ "where i.category in :category "
+							+ "  and i.date between :dateFrom and :dateTo "
+							+ "  and i.x between (cast(substring(:location, 0, locate(',', :location)-1) as double) - cast(:distance as double) / 111319) "
+							+ "    and (cast(substring(:location, 0, locate(',', :location)-1) as double) + cast(:distance as double) / 111319) "
+							+ "  and i.y between (cast(substring(:location, locate(',', :location)+1) as double) - cast(:distance as double) / 111319) "
+							+ "    and (cast(substring(:location, locate(',', :location)+1) as double) + cast(:distance as double) / 111319)" );
 			countQuery.setParameter( "category", category );
 		}
 
