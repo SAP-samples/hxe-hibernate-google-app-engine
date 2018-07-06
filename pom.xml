@@ -27,7 +27,8 @@
 
 		<jdbc.username>sa</jdbc.username>
 		<jdbc.password></jdbc.password>
-		<jdbc.url>jdbc:h2:file:${project.basedir}/src/main/db/sfpd</jdbc.url>
+		<!-- <jdbc.url>jdbc:h2:file:${project.basedir}/src/main/db/sfpd</jdbc.url> -->
+		<jdbc.url>jdbc:h2:mem:</jdbc.url>
 
 		<google.project.id>REPLACE_WITH_YOUR_PROJECT_ID</google.project.id>
 		<google.api.key>REPLACE_WITH_YOUR_API_KEY</google.api.key>

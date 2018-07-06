@@ -41,7 +41,7 @@ public class IncidentController extends AbstractController {
 	@RequestMapping(value = "/analyze", method = RequestMethod.GET)
 	public String analyze(Model model, Pageable pageable) {
 
-		Point point = DEFAULT_LOCATIONS.get( "SAP SF" );
+		Point point = DEFAULT_LOCATIONS.get( "Lombard St" );
 
 		List<String> categories = this.repository.findCategories();
 

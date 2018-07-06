@@ -41,7 +41,7 @@ public class VisualizeController extends AbstractController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String visualize(Model model, Pageable pageable) {
 
-		Point point = DEFAULT_LOCATIONS.get( "SAP SF" );
+		Point point = DEFAULT_LOCATIONS.get( "Lombard St" );
 
 		List<String> categories = this.repository.findCategories();
 
