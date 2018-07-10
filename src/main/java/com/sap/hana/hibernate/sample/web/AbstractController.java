@@ -60,48 +60,19 @@ public abstract class AbstractController {
 			translate = TranslateOptions.newBuilder().setApiKey( this.translationApiKey ).build().getService();
 		}
 
-		String location = translate
-				.translate( "Location:", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "locationText", location );
+		model.addAttribute( "locationText", translateTerm( translate, "Location:", "en", language ) );
+		model.addAttribute( "distanceText", translateTerm( translate, "Distance:", "en", language ) );
+		model.addAttribute( "categoryText", translateTerm( translate, "Category:", "en", language ) );
+		model.addAttribute( "dateText", translateTerm( translate, "Date:", "en", language ) );
+		model.addAttribute( "submitText", translateTerm( translate, "Submit:", "en", language ) );
+		model.addAttribute( "visualizeText", translateTerm( translate, "Visualize:", "en", language ) );
+		model.addAttribute( "analyzeText", translateTerm( translate, "Analyze:", "en", language ) );
+		model.addAttribute( "findAddressText", translateTerm( translate, "Find address", "en", language ) );
+		model.addAttribute( "resultsText", translateTerm( translate, "Results", "en", language ) );
+	}
 
-		String distance = translate
-				.translate( "Distance:", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "distanceText", distance );
-
-		String category = translate
-				.translate( "Category:", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "categoryText", category );
-
-		String date = translate
-				.translate( "Date:", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "dateText", date );
-
-		String submit = translate
-				.translate( "Submit", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "submitText", submit );
-
-		String visualize = translate
-				.translate( "Visualize", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "visualizeText", visualize );
-
-		String analyze = translate
-				.translate( "Analyze", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "analyzeText", analyze );
-
-		String findAddress = translate.translate( "Find address", TranslateOption.sourceLanguage( "en" ),
-				TranslateOption.targetLanguage( language ) ).getTranslatedText();
-		model.addAttribute( "findAddressText", findAddress );
-
-		String results = translate
-				.translate( "Results", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "resultsText", results );
+	private String translateTerm(Translate translate, String term, String sourceLanguage, String targetLanguage) {
+		// TODO
+		return term;
 	}
 }
