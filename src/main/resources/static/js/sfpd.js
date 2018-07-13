@@ -530,7 +530,7 @@ sfpd = {
                 	      strokeWeight: 1,
                 	      fillOpacity: 0.8
                 	},
-                	clickable: false,
+                	clickable: true,
                 	map: sfpd.map.map
                 });
             	  
