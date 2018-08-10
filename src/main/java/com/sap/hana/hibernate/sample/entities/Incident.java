@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.geolatte.geom.C2D;
 import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
 
@@ -37,6 +38,10 @@ public class Incident {
 	@JsonSerialize(using = PointSerializer.class)
 	@JsonDeserialize(using = PointDeserializer.class)
 	private Point<G2D> location;
+	@JsonSerialize(using = PointSerializer.class)
+	@JsonDeserialize(using = PointDeserializer.class)
+	private Point<C2D> mapLocation;
+
 	@Id
 	private long pdId;
 
@@ -142,6 +147,14 @@ public class Incident {
 
 	public void setLocation(Point<G2D> location) {
 		this.location = location;
+	}
+
+	public Point<C2D> getMapLocation() {
+		return this.mapLocation;
+	}
+
+	public void setMapLocation(Point<C2D> mapLocation) {
+		this.mapLocation = mapLocation;
 	}
 
 	public long getPdId() {

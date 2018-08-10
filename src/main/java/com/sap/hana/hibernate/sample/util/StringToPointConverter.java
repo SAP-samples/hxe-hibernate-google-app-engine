@@ -19,7 +19,6 @@ public class StringToPointConverter implements Converter<String, Point<G2D>> {
 	public StringToPointConverter() {
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Point<G2D> convert(String location) {
 		String[] locationComponents = location.split( "," );

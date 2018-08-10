@@ -28,9 +28,9 @@ public abstract class AbstractController {
 
 		Map<String, Point<G2D>> locations = new HashMap<>();
 
-		locations.put( "SAP SF", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (37.6664341 -122.3978736)" ) );
-		locations.put( "Lombard St", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (37.802154870427394 -122.41876602172852)" ) );
-		locations.put( "Golden Gate Park", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (37.76942564512426 -122.4862289428711)" ) );
+		locations.put( "SAP SF", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (-122.3978736 37.6664341 )" ) );
+		locations.put( "Lombard St", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (-122.41876602172852 37.802154870427394)" ) );
+		locations.put( "Golden Gate Park", (Point<G2D>) Wkt.fromWkt( "SRID=4326;POINT (-122.4862289428711 37.76942564512426)" ) );
 
 		DEFAULT_LOCATIONS = Collections.unmodifiableMap( locations );
 	}
@@ -62,48 +62,19 @@ public abstract class AbstractController {
 			translate = TranslateOptions.newBuilder().setApiKey( this.translationApiKey ).build().getService();
 		}
 
-		String location = translate
-				.translate( "Location:", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "locationText", location );
+		model.addAttribute( "locationText", translateTerm( translate, "Location:", "en", language ) );
+		model.addAttribute( "distanceText", translateTerm( translate, "Distance:", "en", language ) );
+		model.addAttribute( "categoryText", translateTerm( translate, "Category:", "en", language ) );
+		model.addAttribute( "dateText", translateTerm( translate, "Date:", "en", language ) );
+		model.addAttribute( "submitText", translateTerm( translate, "Submit:", "en", language ) );
+		model.addAttribute( "visualizeText", translateTerm( translate, "Visualize:", "en", language ) );
+		model.addAttribute( "analyzeText", translateTerm( translate, "Analyze:", "en", language ) );
+		model.addAttribute( "findAddressText", translateTerm( translate, "Find address", "en", language ) );
+		model.addAttribute( "resultsText", translateTerm( translate, "Results", "en", language ) );
+	}
 
-		String distance = translate
-				.translate( "Distance:", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "distanceText", distance );
-
-		String category = translate
-				.translate( "Category:", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "categoryText", category );
-
-		String date = translate
-				.translate( "Date:", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "dateText", date );
-
-		String submit = translate
-				.translate( "Submit", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "submitText", submit );
-
-		String visualize = translate
-				.translate( "Visualize", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "visualizeText", visualize );
-
-		String analyze = translate
-				.translate( "Analyze", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "analyzeText", analyze );
-
-		String findAddress = translate.translate( "Find address", TranslateOption.sourceLanguage( "en" ),
-				TranslateOption.targetLanguage( language ) ).getTranslatedText();
-		model.addAttribute( "findAddressText", findAddress );
-
-		String results = translate
-				.translate( "Results", TranslateOption.sourceLanguage( "en" ), TranslateOption.targetLanguage( language ) )
-				.getTranslatedText();
-		model.addAttribute( "resultsText", results );
+	private String translateTerm(Translate translate, String term, String sourceLanguage, String targetLanguage) {
+		// TODO
+		return term;
 	}
 }

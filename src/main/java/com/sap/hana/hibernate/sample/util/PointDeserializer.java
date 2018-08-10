@@ -28,7 +28,6 @@ public class PointDeserializer extends StdDeserializer<Point<C2D>> {
 		super( vc );
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Point<C2D> deserialize(JsonParser p, DeserializationContext ctxt)
 			throws IOException, JsonProcessingException {

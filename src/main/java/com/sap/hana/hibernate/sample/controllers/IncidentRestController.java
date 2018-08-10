@@ -3,12 +3,12 @@ package com.sap.hana.hibernate.sample.controllers;
 import java.util.Date;
 import java.util.List;
 
+import org.geolatte.geom.G2D;
+import org.geolatte.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.geo.Distance;
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;

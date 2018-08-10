@@ -8,7 +8,7 @@
 	
 	<link rel="stylesheet"
 		th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-		
+	
 	<style type="text/css">
 		.pointer {
 		    cursor: pointer;
@@ -22,9 +22,9 @@
 
 		<h1>SFPD Police Data Analyzer</h1>
 		
-		<div th:replace="navigationPanel :: navigationPanel(active='analyze')"></div>
-
-		<div th:replace="selectPanel :: selectPanel(onSubmit='sfpd.performIncidentSearch()')"></div>
+		<div th:replace="navigationPanel :: navigationPanel(active='cluster')"></div>
+		
+		<div th:replace="selectPanel :: selectPanel(onSubmit='sfpd.performClusterAnalysis()')"></div>
 
 		<div class="panel panel-default">
 
@@ -33,27 +33,20 @@
 			</div>
 
 			<div class="panel-body">
-
-				<div class="container-fluid">
-					<div id="messageArea" class="row">
-					</div>
+				<div id="messageArea" class="row">
+				</div>
 				
-					<div class="row">
-						<div id="resultPanelSummary" class="col-md-4"></div>
-					</div>
-					
-					<div class="row">
-						<div id="map" class="col-md-4" style="height:800px; width:450px;"></div>
-		
-						<div id="resultPanel" class="col-sm-8" style="margin-left: 1em">
-							<p class="search-result no-results">&nbsp;</p>
-						</div>
-					</div>
+				<div class="row">
+					<div id="resultPanelSummary" class="col-md-4"><p>Clusters: <span id="resultCounter">0</span></p></div>
+				</div>
+				
+				<div class="row">
+					<div id="map" class="col-md-6" style="height:800px;width:900px;"></div>
 				</div>
 
 			</div>
 
-			<div id="uris" th:attr="data-uri=${api},data-uri-category=${apiCategory},search-uri=${searchApi}"></div>
+			<div id="uris" th:attr="data-uri=${api},data-uri-category=${apiWithCategory},search-uri=${searchApi}"></div>
 		</div>
 	</div>
 
@@ -75,10 +68,9 @@
 	<script type="text/javascript" th:src="@{/webjars/URI.js/URI.min.js}"></script>
 
 	<script type="text/javascript"
-		src="https://maps.googleapis.com/maps/api/js?@maps.api.key.parameter@"></script>
+		src="https://maps.googleapis.com/maps/api/js?@maps.api.key.parameter@&amp;libraries=visualization"></script>
 		
-	<script type="text/javascript"
-		src="/js/sfpd.js"></script>
+	<script type="text/javascript" src="/js/sfpd.js"></script>
 
 	<script type="text/javascript">
         $(sfpd.init);

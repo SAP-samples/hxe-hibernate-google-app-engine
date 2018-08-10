@@ -6,7 +6,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.geolatte.geom.C2D;
+import org.geolatte.geom.G2D;
 import org.geolatte.geom.Geometry;
+import org.geolatte.geom.Position;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -22,10 +24,27 @@ public class IncidentLocationAndCount {
 	@Transient
 	private long weight;
 
-	public IncidentLocationAndCount(Geometry<C2D> location, long weight) {
-		C2D positions = location.getPositions().getPositionN( 0 );
-		this.x = positions.getX();
-		this.y = positions.getY();
+	public IncidentLocationAndCount(double x, double y, long weight) {
+		this.x = x;
+		this.y = y;
+		this.weight = weight;
+	}
+
+	public IncidentLocationAndCount(Geometry<?> location, long weight) {
+		Position positions = location.getPositions().getPositionN( 0 );
+		if ( positions instanceof C2D ) {
+			C2D planarPositions = (C2D) positions;
+			this.x = planarPositions.getX();
+			this.y = planarPositions.getY();
+		}
+		else if ( positions instanceof G2D ) {
+			G2D roundEarthPositions = (G2D) positions;
+			this.x = roundEarthPositions.getLon();
+			this.y = roundEarthPositions.getLat();
+		}
+		else {
+			assert false;
+		}
 		this.weight = weight;
 	}
 

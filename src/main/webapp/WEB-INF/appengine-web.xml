@@ -3,7 +3,11 @@
 	<version>1</version>
 	<threadsafe>true</threadsafe>
 	<runtime>java8</runtime>
+	<automatic-scaling>
+		<min-instances>1</min-instances>
+		<max-instances>1</max-instances>
+	</automatic-scaling>
 	<system-properties>
-       <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
-    </system-properties>
+		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
+	</system-properties>
 </appengine-web-app>
