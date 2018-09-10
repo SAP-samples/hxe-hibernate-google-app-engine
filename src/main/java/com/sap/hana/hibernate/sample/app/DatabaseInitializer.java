@@ -48,6 +48,7 @@ import org.springframework.stereotype.Component;
 import com.google.common.collect.Streams;
 import com.sap.hana.hibernate.sample.entities.Address;
 import com.sap.hana.hibernate.sample.entities.Incident;
+import com.sap.hana.hibernate.sample.entities.TermMapping;
 import com.sap.hana.hibernate.sample.repositories.AddressRepository;
 import com.sap.hana.hibernate.sample.repositories.IncidentRepository;
 

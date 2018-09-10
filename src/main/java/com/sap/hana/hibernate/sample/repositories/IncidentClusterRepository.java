@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.geolatte.geom.G2D;
+import org.geolatte.geom.GeometryType;
 import org.geolatte.geom.Point;
 import org.springframework.data.geo.Distance;
 import org.springframework.stereotype.Repository;
