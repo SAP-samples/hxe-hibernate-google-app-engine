@@ -191,7 +191,7 @@ sfpd = {
         	var incidents = response.content;
         	
         	if (incidents.length) {
-	    		var html = '<table class="table table-striped table-bordered table-hover table-condensed">\
+	    		var html = '<div class="table-responsive-lg"><table class="table table-striped table-bordered table-hover table-sm">\
 							    <tr class="search-result-header">\
 							      <th>ID</th>\
 							      <th>Date</th>\
@@ -221,10 +221,10 @@ sfpd = {
 	                	map: sfpd.map.map
 	                });
 	        		marker.addListener('mouseover', function() {
-	        			$('#' + tableRowId).addClass('info');
+	        			$('#' + tableRowId).addClass('table-info');
 	        		});
 	        		marker.addListener('mouseout', function() {
-	        			$('#' + tableRowId).removeClass('info');
+	        			$('#' + tableRowId).removeClass('table-info');
 	        		});
 	    		
 	    		    sfpd.map.markers.push(marker);
@@ -241,7 +241,7 @@ sfpd = {
 					  <td>' + incident.resolution + '</td>\
 					</tr>';
 	            });
-	        	html += '</table>';
+	        	html += '</table></div>';
 	        	
 	        	// create the paging bar
 	        	var totalPages = response.totalPages;
@@ -255,18 +255,18 @@ sfpd = {
 	        	
 	        	html += '<nav aria-label="Page navigation">\
 						  <ul class="pagination">\
-						    <li class="' + (isFirstPage ? 'disabled' : 'pointer') + '">\
-						      <a ' + (isFirstPage ? '' : ' onClick="sfpd.performIncidentSearch(' + (pageNumber-1) + ')"') + ' aria-label="Previous">\
+						    <li class="page-item ' + (isFirstPage ? 'disabled' : 'pointer') + '">\
+						      <a class="page-link" ' + (isFirstPage ? '' : ' onClick="sfpd.performIncidentSearch(' + (pageNumber-1) + ')"') + ' aria-label="Previous">\
 						        <span aria-hidden="true">&laquo;</span>\
 						      </a>\
 						    </li>'
 	        	for (var i = 0 ; i < pages ; i++) {
 	        		var currentPageNumber = firstPage + i;
-	        		html += '<li class="' + (currentPageNumber == pageNumber ? 'active' : 'pointer') + '"><a onClick="sfpd.performIncidentSearch(' + currentPageNumber + ')">' + (currentPageNumber+1) + '</a></li>';
+	        		html += '<li class="page-item ' + (currentPageNumber == pageNumber ? 'active' : 'pointer') + '"><a class="page-link" onClick="sfpd.performIncidentSearch(' + currentPageNumber + ')">' + (currentPageNumber+1) + '</a></li>';
 	        	}
 
-				html += '   <li class="' + (isLastPage ? 'disabled' : 'pointer') + '">\
-						      <a ' + (isLastPage ? '' : 'onClick="sfpd.performIncidentSearch(' + (pageNumber+1) + ')"') + ' aria-label="Next">\
+				html += '   <li class="page-item ' + (isLastPage ? 'disabled' : 'pointer') + '">\
+						      <a class="page-link" ' + (isLastPage ? '' : 'onClick="sfpd.performIncidentSearch(' + (pageNumber+1) + ')"') + ' aria-label="Next">\
 						        <span aria-hidden="true">&raquo;</span>\
 						      </a>\
 						    </li>\
@@ -303,7 +303,7 @@ sfpd = {
     	
     	$('#findAddressButtonGroup').after('\
     			                            <div id="addressSearch">\
-    			                              <input id="addressSearchTextfield" name="addressSearchTextfield" type="text" class="form-control" onKeyUp="sfpd.findAddress()" />\
+    			                              <input id="addressSearchTextfield" name="addressSearchTextfield" type="text" class="form-control form-control-sm" onKeyUp="sfpd.findAddress()" />\
     			                              <div id="addressSearchResults">\
     			                              </div>\
     			                            </div>');
@@ -341,7 +341,7 @@ sfpd = {
         			return;
         		}
         		
-        		html += '<a class="list-group-item pointer" onClick="$(\'#location\').val(\'' + address.y + ',' + address.x + '\');sfpd.hideAddressSearch()">' + address.address + '</a>';
+        		html += '<button type="button" class="list-group-item list-group-item-action pointer p-1" style="font-size:0.9rem" onClick="$(\'#location\').val(\'' + address.y + ',' + address.x + '\');sfpd.hideAddressSearch()">' + address.address + '</button>';
             });
     	    html += '</div>';
         	$('#addressSearchResults').append(html);
@@ -552,6 +552,12 @@ sfpd = {
     },
 
     init: function() {
+    	$('#selectForm').on('shown.bs.collapse', function () {
+    		$('#ddArrow').html('&#x25B4;')
+    	});
+    	$('#selectForm').on('hidden.bs.collapse', function () {
+    		$('#ddArrow').html('&#x25BE;')
+    	});
     	// create the map object
         sfpd.map.map = new google.maps.Map($("#map")[0], { zoom: 15 });
         

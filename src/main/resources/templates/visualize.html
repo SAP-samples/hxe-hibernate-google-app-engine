@@ -18,30 +18,28 @@
 
 <body>
 
-	<div class="container-fluid">
+	<div class="container-fluid m-2">
 
-		<h1>SFPD Police Data Analyzer</h1>
+		<div th:replace="selectPanel :: selectPanel(onSubmit='sfpd.loadHeatMap()', active='visualize')"></div>
 		
-		<div th:replace="navigationPanel :: navigationPanel(active='visualize')"></div>
-		
-		<div th:replace="selectPanel :: selectPanel(onSubmit='sfpd.loadHeatMap()')"></div>
+		<div>&nbsp;</div>
 
-		<div class="panel panel-default">
+		<div class="card">
 
-			<div id="resultList" class="panel-heading">
-				<h3 class="panel-title" th:text="${resultsText} ?: 'Results'">Results</h3>
+			<div id="resultList">
+				<h5 class="card-header" th:text="${resultsText} ?: 'Results'">Results</h5>
 			</div>
 
-			<div class="panel-body">
+			<div class="card-body">
 				<div id="messageArea" class="row">
 				</div>
 				
 				<div class="row">
-					<div id="resultPanelSummary" class="col-md-4"><p>Incidents: <span id="resultCounter">0</span></p></div>
+					<div id="resultPanelSummary" class="col"><p>Incidents: <span id="resultCounter">0</span></p></div>
 				</div>
 				
 				<div class="row">
-					<div id="map" class="col-md-6" style="height:800px;width:900px;"></div>
+					<div id="map" class="col" style="height:800px;width:900px;"></div>
 				</div>
 
 			</div>
@@ -62,9 +60,6 @@
 	<script type="text/javascript"
 		th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 		
-	<script type="text/javascript"
-		th:src="@{/webjars/bootstrap/js/alert.js}"></script>
-
 	<script type="text/javascript" th:src="@{/webjars/URI.js/URI.min.js}"></script>
 
 	<script type="text/javascript"

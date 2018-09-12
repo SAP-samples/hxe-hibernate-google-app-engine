@@ -3,80 +3,116 @@
 <head>
 </head>
 <body>
-	<div class="panel panel-default" th:fragment="selectPanel(onSubmit)">
-		<div class="panel-body">
-	
-			<form action="/" class="form-horizontal">
-	
-				<div class="form-group">
-					<div class="col-sm-2"></div>
-					<div class="col-sm-10">
-						<a class="btn btn-default" th:each="location : ${locations}"
-							th:onclick="${{'$(''#location'').val(''' + location.value.position.lat + ',' + location.value.position.lon + ''')'}}"
-							th:text="${location.key}">Foo</a>
+	<div class="card" th:fragment="selectPanel(onSubmit, active)" id="selectCard">
+		<div class="card-header m-0 p-0" id="selectHeading">
+			<div class="container-fluid">
+				<div class="row justify-content-center">
+					<div class="col align-middle"><span class="h3 text-nowrap">SFPD Police Data Analyzer</span></div>
+					<div class="col">
+						<ul class="nav nav-pills nav-fill">
+							<li role="presentation" class="nav-item border-left border-right px-1">
+								<div th:switch="${active == null || #strings.isEmpty(active) || active == 'visualize'}">
+									<a th:case="${true}" class="nav-link active collapsed" href="#" data-toggle="collapse" data-target="#selectForm" aria-expanded="true" aria-controls="selectForm"><span th:text="${visualizeText} ?: 'Visualize'">Visualize</span> <span id="ddArrow">&#x25B4;</span></a>
+									<a th:case="*" class="nav-link inactive collapsed" href="/"><span th:text="${visualizeText} ?: 'Visualize'">Visualize</span></a>
+								</div>
+							</li>
+							<li role="presentation" class="nav-item border-right px-1">
+								<div th:switch="${active == 'analyze'}">
+									<a th:case="${true}" class="nav-link active collapsed" href="#" data-toggle="collapse" data-target="#selectForm" aria-expanded="true" aria-controls="selectForm"><span th:text="${analyzeText} ?: 'Analyze'">Analyze</span> <span id="ddArrow">&#x25B4;</span></a>
+									<a th:case="*" class="nav-link inactive collapsed" href="/analyze"><span th:text="${analyzeText} ?: 'Analyze'">Analyze</span></a>
+								</div>
+							</li>
+							<!-- <li role="presentation" class="nav-item border-right px-1">
+								<div th:switch="${active == 'cluster'}">
+									<a th:case="${true}" class="nav-link active collapsed" href="#" data-toggle="collapse" data-target="#selectForm" aria-expanded="true" aria-controls="selectForm"><span th:text="${clusterText} ?: 'Cluster'">Cluster</span> <span id="ddArrow">&#x25B4;</span></a>
+									<a th:case="*" class="nav-link inactive collapsed" href="/cluster"><span th:text="${clusterText} ?: 'Cluster'">Cluster</span></a>
+								</div>
+							</li>-->
+						</ul>
 					</div>
-				</div>
-	
-				<div class="form-group">
-					<label for="location" class="col-sm-2 control-label" th:text="${locationText} ?: 'Location:'">Location:</label>
-					<div class="col-sm-2">
-						<input id="location" name="location" th:value="${{location.position.lat + ',' + location.position.lon}}"
-							type="text" class="form-control" placeholder="lat,long" />
-					</div>
-					<div class="col-sm-4">
-					    <div class="input-group">
-					        <div id="findAddressButtonGroup" class="input-group-btn">
-						        <button id="findAddressButton" type="button" class="btn btn-default" onClick="sfpd.showAddressSearch()" th:text="${findAddressText} ?: 'Find address'">Find address</button>
-						    </div>
+					<div class="col text-right align-middle">
+						<div class="form-check form-check-inline align-middle mt-2">
+							<label class="form-check-label text-secondary text-nowrap" for="autoCollapseCheckbox">auto collapse</label>
+							<input class="form-check-input ml-1" type="checkbox" id="autoCollapseCheckbox" value="true" checked="checked">
 						</div>
 					</div>
-					<div id="addressMessageArea" class="col-sm-4">
-					</div>
 				</div>
-	
-				<div class="form-group">
-					<label for="distance" class="col-sm-2 control-label" th:text="${distanceText} ?: 'Distance:'">Distance:</label>
-					<div class="col-sm-2">
-						<select id="distance" name="distance" class="form-control">
-							<option th:each="distance : ${distances}"
-								th:value="${{distance}}" th:text="${distance.value == -1 ? 'ALL' : distance}"
-								th:selected="${distance == selectedDistance}">
-								Distance</option>
-						</select>
+			</div>
+		</div>
+		<div id="selectForm" class="collapse show" aria-labelledby="selectHeading" data-parent="#selectCard">
+			<div class="card-body py-2 my-0">
+		
+				<form action="/" class="form-horizontal">
+		
+					<div class="form-group form-row my-1">
+						<div class="col-md-1"></div>
+						<div class="col-md-11">
+							<button type="button" class="btn btn-secondary btn-sm mr-1" th:each="location : ${locations}"
+								th:onclick="${{'$(''#location'').val(''' + location.value.position.lat + ',' + location.value.position.lon + ''')'}}"
+								th:text="${location.key}">Foo</button>
+						</div>
 					</div>
-				</div>
-				
-				<div class="form-group">
-					<label for="category" class="col-sm-2 control-label" th:text="${categoryText} ?: 'Category:'">Category:</label>
-					<div class="col-sm-2">
-						<select multiple="multiple" id="category" name="category" class="form-control">
-							<option th:each="category : ${categories}"
-								th:value="${{category}}" th:text="${category}"
-								th:selected="${selectedCategories != null and selectedCategories.contains(category)}">
-								Category</option>
-						</select>
+		
+					<div class="form-group form-row my-1">
+						<label for="location" class="col-md-1 control-label text-nowrap" th:text="${locationText} ?: 'Location:'">Location:</label>
+						<div class="col-md-3">
+							<input id="location" name="location" th:value="${{location.position.lat + ',' + location.position.lon}}"
+								type="text" class="form-control form-control-sm" placeholder="lat,long" />
+						</div>
+						<div class="col-md-5 input-group-prepend">
+					        <div id="findAddressButtonGroup" class="input-group-prepend">
+						        <button id="findAddressButton" type="button" class="btn btn-secondary btn-sm" onClick="sfpd.showAddressSearch()" th:text="${findAddressText} ?: 'Find address'">Find address</button>
+						    </div>
+						</div>
+						<div id="addressMessageArea" class="col-md-3">
+						</div>
 					</div>
-				</div>
-				
-				<div class="form-group">
-					<label for="date" class="col-sm-2 control-label" th:text="${dateText} ?: 'Date:'">Date:</label>
-					<div class="col-sm-2">
-						<input id="dateFrom" name="dateFrom" th:value="${{dateFrom}}"
-								type="date" class="form-control" placeholder="From" />
+		
+					<div class="form-group form-row my-1">
+						<label for="distance" class="col-md-1 control-label text-nowrap" th:text="${distanceText} ?: 'Distance:'">Distance:</label>
+						<div class="col-md-3">
+							<select id="distance" name="distance" class="form-control form-control-sm">
+								<option th:each="distance : ${distances}"
+									th:value="${{distance}}" th:text="${distance.value == -1 ? 'ALL' : distance}"
+									th:selected="${distance == selectedDistance}">
+									Distance</option>
+							</select>
+						</div>
 					</div>
-					<div class="col-sm-2">
-						<input id="dateTo" name="dateTo" th:value="${{dateTo}}"
-								type="date" class="form-control" placeholder="To" />
+					
+					<div class="form-group form-row my-1">
+						<label for="category" class="col-md-1 control-label text-nowrap" th:text="${categoryText} ?: 'Category:'">Category:</label>
+						<div class="col-md-3">
+							<select multiple="multiple" id="category" name="category" class="form-control form-control-sm">
+								<option th:each="category : ${categories}"
+									th:value="${{category}}" th:text="${category}"
+									th:selected="${selectedCategories != null and selectedCategories.contains(category)}">
+									Category</option>
+							</select>
+						</div>
 					</div>
-				</div>
-	
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						<button id="submit" type="button" class="btn btn-default" th:onclick="${onSubmit}" th:text="${submitText} ?: 'Submit'">Submit</button>
+					
+					<div class="form-group form-row my-1">
+						<label for="date" class="col-md-1 control-label text-nowrap" th:text="${dateText} ?: 'Date:'">Date:</label>
+						<div class="col-md-3">
+							<input id="dateFrom" name="dateFrom" th:value="${{dateFrom}}"
+									type="date" class="form-control form-control-sm" placeholder="From" />
+						</div>
+						<div class="col-md-3">
+							<input id="dateTo" name="dateTo" th:value="${{dateTo}}"
+									type="date" class="form-control form-control-sm" placeholder="To" />
+						</div>
 					</div>
-				</div>
-	
-			</form>
+		
+					<div class="form-group form-row my-1">
+						<div class="col-md-1"></div>
+						<div class="col-md-11">
+							<button id="submit" type="button" class="btn btn-primary btn-sm" th:onclick="'if ($(\'#autoCollapseCheckbox\').prop(\'checked\')) { $(\'#selectForm\').collapse(\'hide\');} ' + ${onSubmit}" th:text="${submitText} ?: 'Submit'">Submit</button>
+						</div>
+					</div>
+		
+				</form>
+			</div>
 		</div>
 	</div>
 </body>
