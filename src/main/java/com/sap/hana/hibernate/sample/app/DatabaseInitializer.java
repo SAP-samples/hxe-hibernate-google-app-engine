@@ -59,7 +59,9 @@ public class DatabaseInitializer {
 
 	private static final SimpleDateFormat SDF = new SimpleDateFormat( "MM/dd/yyyy" );
 
-	private static final Pattern LOCATION_PATTERN = Pattern.compile( "\\((-?\\d+(\\.\\d+)?), (-?\\d+(\\.\\d+)?)\\)" );
+	private static final Pattern INCIDENT_LOCATION_PATTERN = Pattern.compile( "\\((-?\\d+(\\.\\d+)?), (-?\\d+(\\.\\d+)?)\\)" );
+
+	private static final Pattern ADDRESS_LOCATION_PATTERN = Pattern.compile( "POINT\\s*\\((-?\\d+(\\.\\d+)?) (-?\\d+(\\.\\d+)?)\\)" );
 
 	private static final WktDecoder WKT_DECODER = Wkt.newDecoder( Dialect.HANA_EWKT );
 
@@ -217,7 +219,7 @@ public class DatabaseInitializer {
 						i.setLocation( createLocation( i.getX(), i.getY() ) );
 					}
 					else {
-						Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 11 ) );
+						Matcher matcher = INCIDENT_LOCATION_PATTERN.matcher( fields.get( 11 ) );
 						if ( matcher.matches() ) {
 							i.setLocation( createLocation( Double.parseDouble( matcher.group( 3 ) ),
 									Double.parseDouble( matcher.group( 1 ) ) ) );
@@ -420,7 +422,7 @@ public class DatabaseInitializer {
 						throw new RuntimeException( new InterruptedException( "The current thread has been interrupted" ) );
 					}
 					List<String> fields = parseLine( line );
-					assert fields.size() == 11;
+					assert fields.size() == 21;
 
 					Address a = new Address( Long.valueOf( fields.get( 0 ) ) );
 					a.setCnn( fields.get( 1 ) );
@@ -431,7 +433,7 @@ public class DatabaseInitializer {
 					a.setStreetType( fields.get( 6 ) );
 					a.setZipCode( fields.get( 7 ) );
 					try {
-						double x = Double.parseDouble( fields.get( 8 ) );
+						double x = Double.parseDouble( fields.get( 9 ) );
 						if ( !isValidXCoordinate( x, a.getBaseID().longValue(), "address" ) ) {
 							return Long.valueOf( 0 );
 						}
@@ -441,7 +443,7 @@ public class DatabaseInitializer {
 						log.info( "Error parsing x coordinate", e );
 					}
 					try {
-						double y = Double.parseDouble( fields.get( 9 ) );
+						double y = Double.parseDouble( fields.get( 8 ) );
 						if ( !isValidYCoordinate( y, a.getBaseID().longValue(), "address" ) ) {
 							return Long.valueOf( 0 );
 						}
@@ -455,17 +457,17 @@ public class DatabaseInitializer {
 						a.setLocation( createLocation( a.getX(), a.getY() ) );
 					}
 					else {
-						Matcher matcher = LOCATION_PATTERN.matcher( fields.get( 10 ) );
+						Matcher matcher = ADDRESS_LOCATION_PATTERN.matcher( fields.get( 10 ) );
 						if ( matcher.matches() ) {
-							a.setLocation( createLocation( Double.parseDouble( matcher.group( 3 ) ),
-									Double.parseDouble( matcher.group( 1 ) ) ) );
+							a.setLocation( createLocation( Double.parseDouble( matcher.group( 1 ) ),
+									Double.parseDouble( matcher.group( 3 ) ) ) );
 
 							if ( Double.isNaN( a.getX() ) ) {
-								a.setX( Double.parseDouble( matcher.group( 3 ) ) );
+								a.setX( Double.parseDouble( matcher.group( 1 ) ) );
 							}
 
 							if ( Double.isNaN( a.getY() ) ) {
-								a.setY( Double.parseDouble( matcher.group( 1 ) ) );
+								a.setY( Double.parseDouble( matcher.group( 3 ) ) );
 							}
 						}
 						else {

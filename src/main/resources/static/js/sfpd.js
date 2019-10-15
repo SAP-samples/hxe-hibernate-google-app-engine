@@ -363,6 +363,8 @@ sfpd = {
             return;
         }
     	
+    	var startTime = new Date();
+    	
     	// Display a loading animation
     	$("#resultCounter").html('');
 		var opts = {
@@ -426,7 +428,7 @@ sfpd = {
                   map: sfpd.map.map
             });
             
-        	$('#resultCounter').html(sumWeight);
+        	$('#resultCounter').html(sumWeight + ' (' + ((new Date() - startTime)/1000) + ' s)');
         }).fail(function() {
         	$('#messageArea').html('<div class="alert alert-danger alert-dismissible" role="alert">\
         			                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\
