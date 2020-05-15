@@ -9,10 +9,11 @@ In addition to standard SQL queries this application also contains examples for 
 
 ## Software
 * A Java runtime environment for Java 8 or greater
-* [Apache Maven](http://maven.apache.org/download.cgi)
+* [Apache Maven](http://maven.apache.org/download.cgi) version 3.5 or higher
 * A SAP HANA database instance, for example, a SAP HANA, Express Edition instance which can be obtained via the [SAP HANA, Express Edition download page](https://www.sap.com/cmp/ft/crm-xu16-dat-hddedft/index.html)
 * A [Google Cloud Platform](https://cloud.google.com/) account for deploying the application to the cloud. 
 * A [Google Cloud Platform API key](https://cloud.google.com/docs/authentication/api-keys) for using the [Google Maps Javascript API](https://developers.google.com/maps/documentation/javascript/) and the [Google Cloud Translation API](https://cloud.google.com/translate/docs/reference/libraries#client-libraries-install-java).
+* The [Google Cloud SDK](https://cloud.google.com/sdk/install) for deploying to the Google App Engine
 * The [San Francisco Police Department Incidents](https://data.sfgov.org/Public-Safety/-Change-Notice-Police-Department-Incidents/tmnf-yvry) data set as [CSV](https://data.sfgov.org/api/views/tmnf-yvry/rows.csv?accessType=DOWNLOAD)
 * The [San Francisco Addresses](https://data.sfgov.org/Geographic-Locations-and-Boundaries/Addresses-Enterprise-Addressing-System/3mea-di5p) data set as [CSV](https://data.sfgov.org/api/views/3mea-di5p/rows.csv?accessType=DOWNLOAD)
 
@@ -97,7 +98,7 @@ If you have separated the configuration into a default cloud configuration and a
 Once the application has started you can access it by navigating to [http://localhost:8080](http://localhost:8080]) in a web browser.
 
 ### Deploy the application to the Google Cloud Platform
-Deploying the application to the cloud can be done using the configured [Google App Engine Maven Plugin](https://cloud.google.com/appengine/docs/standard/java/tools/maven).
+Deploying the application to the cloud can be done using the configured Maven [Google App Engine Plugin (Cloud SDK-based)](https://cloud.google.com/appengine/docs/standard/java/using-maven).
 
 Before the application can be deployed to the cloud you must [create a GCP project](https://cloud.google.com/appengine/docs/standard/java/console/) and add it's ID to the Maven build descriptor. To do this, edit the file `pom.xml` and replace the value of the property `google.project.id` with your actual project ID.
 
@@ -114,7 +115,7 @@ Before the application can be deployed to the cloud you must [create a GCP proje
 After that you can deploy the application to the cloud by running the following Maven command:
 
 ```
-> mvn appengine:update
+> mvn appengine:deploy
 ```
 
 Once the application has been deployed you can access it by navigating to `http://<your-project-id>.appspot.com` in a web browser.

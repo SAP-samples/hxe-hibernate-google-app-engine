@@ -234,9 +234,13 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>com.google.appengine</groupId>
+				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
-				<version>1.9.64</version>
+				<version>2.2.0</version>
+				<configuration>
+					<projectId>${google.project.id}</projectId>
+					<version>1</version>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
