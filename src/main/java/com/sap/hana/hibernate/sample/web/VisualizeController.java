@@ -45,14 +45,16 @@ public class VisualizeController extends AbstractController {
 		Point<G2D> point = DEFAULT_LOCATIONS.get( "Lombard St" );
 
 		List<String> categories = this.repository.findCategories();
+		Date minDate = this.repository.findMinDate();
+		Date currentDate = new Date();
 
 		model.addAttribute( "categories", categories );
 		model.addAttribute( "distances", DISTANCES );
 		model.addAttribute( "selectedDistance", DEFAULT_DISTANCE );
 		model.addAttribute( "location", point );
 		model.addAttribute( "locations", DEFAULT_LOCATIONS );
-		model.addAttribute( "dateFrom", SDF.format( this.repository.findMinDate() ) );
-		model.addAttribute( "dateTo", SDF.format( new Date() ) );
+		model.addAttribute( "dateFrom", minDate == null ? SDF.format( currentDate ) : SDF.format( minDate ) );
+		model.addAttribute( "dateTo", SDF.format( currentDate ) );
 		model.addAttribute( "api", Constants.INCIDENT_LOCATION_AND_COUNT_API_PATH_TEMPLATE );
 		model.addAttribute( "apiWithCategory", Constants.INCIDENT_LOCATION_AND_COUNT_WITH_CATEGORY_API_PATH_TEMPLATE );
 		model.addAttribute( "searchApi", Constants.ADDRESS_API_PATH_TEMPLATE );
