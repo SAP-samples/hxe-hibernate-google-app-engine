@@ -115,7 +115,7 @@ Before the application can be deployed to the cloud you must [create a GCP proje
 After that you can deploy the application to the cloud by running the following Maven command:
 
 ```
-> mvn appengine:deploy
+> mvn package appengine:deploy
 ```
 
 Once the application has been deployed you can access it by navigating to `http://<your-project-id>.appspot.com` in a web browser.
