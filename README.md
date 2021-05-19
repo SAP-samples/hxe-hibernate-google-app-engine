@@ -1,3 +1,5 @@
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/hxe-hibernate-google-app-engine)](https://api.reuse.software/info/github.com/SAP-samples/hxe-hibernate-google-app-engine)
+
 # Description
 This project is a demo application illustrating how to build Java applications with [Spring](https://spring.io/) and [Hibernate](http://hibernate.org/) on SAP HANA. It can serve as a starting point for developing other Java applications or simply provide insights on how to set up an application and how to run queries against the database.
 
