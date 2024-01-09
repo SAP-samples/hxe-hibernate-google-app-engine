@@ -178,5 +178,5 @@ Currently the address search implementation uses standard SQL LIKE queries. This
 These drawbacks can be addressed by using SAP HANA fuzzy text search.
 
 # License
-Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+Copyright (c) 2018-2024 SAP SE or an SAP affiliate company. All rights reserved.
 This project is licensed under the Apache Software License, v. 2 except as noted otherwise in the [LICENSE](LICENSES/Apache-2.0.txt) file
